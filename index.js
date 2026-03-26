@@ -2,6 +2,8 @@ const calculateScore = (frames) => {
   const flattedFrames = frames.flat();
   //[6,6,6,6]
   //[3,3,3,3,3,3,3]
+
+  //NEXTTIME - Refactor previous/next score fetching
   return flattedFrames.reduce((total, currentThrow, currIdx) => {
     console.log(currIdx);
     const prevThrow = flattedFrames[currIdx - 1];
