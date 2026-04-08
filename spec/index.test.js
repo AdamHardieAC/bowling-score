@@ -48,7 +48,7 @@ test("No pair > 9", () => {
   ).toBe(63);
 });
 
-test("Spare on first throw", () => {
+test("Spare on first frame", () => {
   expect(
     calculateScore([
       [6, 4], //10 + 3 //13
@@ -63,4 +63,52 @@ test("Spare on first throw", () => {
       [5, 0], //68
     ]),
   ).toBe(68);
+});
+test("Spare on second frame", () => {
+  expect(
+    calculateScore([
+      [6, 3], //9
+      [5, 5], //10 + next first throw //(14) 23
+      [4, 1], //23 + 4 + 1 //28
+      [2, 2], //32
+      [6, 3], //41
+      [8, 0], //49
+      [1, 1], //51
+      [3, 3], //57
+      [4, 4], //65
+      [5, 0], //70
+    ]),
+  ).toBe(70);
+});
+test("Spare on final frame", () => {
+  expect(
+    calculateScore([
+      [6, 3], //9
+      [5, 4], //18
+      [4, 1], //23
+      [2, 2], //27
+      [6, 3], //36
+      [8, 0], //44
+      [1, 1], //46
+      [3, 3], //52
+      [4, 4], //60
+      [5, 5, 4], // (60) + 5 + 5 + (next throw) // 74
+    ]),
+  ).toBe(74);
+});
+test.only("Strike ", () => {
+  expect(
+    calculateScore([
+      [6, 3], //9
+      [10, 0], // 9 + 10 + 4 + 1 (next entire frame) // 24
+      [4, 1], //29
+      [2, 2], //33
+      [6, 3], //42
+      [8, 0], //50
+      [1, 1], //52
+      [3, 3], //58
+      [4, 4], //66
+      [5, 4], //75
+    ]),
+  ).toBe(75);
 });
