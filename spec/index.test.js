@@ -96,7 +96,7 @@ test("Spare on final frame", () => {
     ]),
   ).toBe(74);
 });
-test.only("Strike ", () => {
+test("Strike ", () => {
   expect(
     calculateScore([
       [6, 3], //9
