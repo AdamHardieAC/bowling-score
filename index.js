@@ -9,21 +9,14 @@ const calculateScore = (frames) => {
     const prevThrow = flattedFrames[currIdx - 1];
     const nextThrow = flattedFrames[currIdx + 1];
     const isLastThrowOfFrame = currIdx % 2 != 0;
-    const isStrike = !isLastThrowOfFrame && currentThrow === 10;
-    const isSpare = prevThrow + currentThrow === 10 && prevThrow !== 10;
-    const isStrikeOrSpare = () => {
-      if (isLastThrowOfFrame && currentThrow === 10) return "spare";
-      if (!isLastThrowOfFrame && currentThrow === 10) return "strike";
-    };
     const isLastFrame = currIdx >= 18;
+    const isStrike = !isLastThrowOfFrame && currentThrow === 10 && !isLastFrame;
+    const isSpare =
+      prevThrow + currentThrow === 10 && prevThrow !== 10 && !isLastFrame;
 
-    // spare on last frame
-    if (currIdx === 20) return total;
-    // strike
-    // todo if its the last frame we add everything
-    // right now we are skipping the last throw
-    if (isStrikeOrSpare() === "strike" && !isLastFrame) {
-      //[10, 0, 4, 4]
+    //fix perfect game
+    //test consecutive spares
+    if (isStrike) {
       let nextFrameTotal = [
         flattedFrames[currIdx + 2],
         flattedFrames[currIdx + 3],
