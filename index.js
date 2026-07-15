@@ -28,20 +28,56 @@
 //   }, 0);
 // };
 const calculateScore = (frames) => {
-  return frames.reduce((total, currentThrow, currIdx) => {
-    let throwTotal = currentThrow.reduce((acc, curr, idx) => acc + curr, 0);
+  return frames.reduce((total, currentFrame, currIdx) => {
+    // console.log(total);
+    //[10, 0]
+    // console.log(currentFrame);
+    let frameTotal = currentFrame.reduce((acc, curr, idx) => acc + curr, 0);
 
     const isFinalFrame = currIdx === 9;
-    const isSpare = throwTotal === 10 && !isFinalFrame;
+    const isStrike = currentFrame[0] === 10 && !isFinalFrame;
+    const isSpare = !isStrike && frameTotal === 10 && !isFinalFrame;
+
+    if (isStrike) {
+      const nextFrameTotal = frames[currIdx + 1].reduce(
+        (acc, curr, idx) => acc + curr,
+        0,
+      );
+      frameTotal += nextFrameTotal;
+      // if nextNextFrame is a strike, do the same again
+      if (
+        frames[currIdx + 1][0] === 10 &&
+        !isFinalFrame &&
+        frames[currIdx + 2]
+      ) {
+        let nextNextFrame = frames[currIdx + 2][0];
+        // const nextNextFrameTotal = frames[currIdx + 2].reduce(
+        //   (acc, curr, idx) => acc + curr,
+        //   0,
+        // );
+        frameTotal += nextNextFrame;
+      }
+    }
 
     if (isSpare) {
       const firstOfNextFrame = frames[currIdx + 1][0];
-      throwTotal += firstOfNextFrame;
+      frameTotal += firstOfNextFrame;
     }
-    return total + throwTotal;
+
+    console.log({
+      totalBefore: total,
+      frameTotal,
+      currIdx,
+      currentFrame,
+    });
+    return total + frameTotal;
   }, 0);
 };
 
 module.exports = calculateScore;
 //Continue refactoring
 // work on strikes
+// - Continue to work on strikes, there's an issue with next(Next)Frames and
+// adding to the total for the current frame
+// e.g. going into frame 9 we've got the right total
+// but we're adding 9 + all of frame 10 throws
