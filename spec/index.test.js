@@ -283,7 +283,7 @@ test("5 recurring strikes into final frame", () => {
   ).toBe(90);
 });
 
-test.only("all strikes", () => {
+test("all strikes", () => {
   expect(
     calculateScore([
       [10, 0], // 30

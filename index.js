@@ -29,38 +29,40 @@
 // };
 const calculateScore = (frames) => {
   return frames.reduce((total, currentFrame, currIdx) => {
-    // console.log(total);
-    //[10, 0]
-    // console.log(currentFrame);
     let frameTotal = currentFrame.reduce((acc, curr, idx) => acc + curr, 0);
 
     const isFinalFrame = currIdx === 9;
     const isStrike = currentFrame[0] === 10 && !isFinalFrame;
     const isSpare = !isStrike && frameTotal === 10 && !isFinalFrame;
+    const nextFrame = frames[currIdx + 1];
+    const nextNextFrame = frames[currIdx + 2];
 
     if (isStrike) {
-      const nextFrameTotal = frames[currIdx + 1].reduce(
-        (acc, curr, idx) => acc + curr,
-        0,
-      );
+      // const isNextFrameFinal = currIdx + 1 === 9;
+
+      // const nextFrameTotal = (
+      //   isNextFrameFinal ? frames[currIdx + 1].slice(0, 2) : frames[currIdx + 1]
+      // ).reduce((acc, curr, idx) => acc + curr, 0);
+      const nextFrameTotal = nextFrame
+        .slice(0, 2)
+        .reduce((acc, curr, idx) => acc + curr, 0);
       frameTotal += nextFrameTotal;
       // if nextNextFrame is a strike, do the same again
-      if (
-        frames[currIdx + 1][0] === 10 &&
-        !isFinalFrame &&
-        frames[currIdx + 2]
-      ) {
-        let nextNextFrame = frames[currIdx + 2][0];
-        // const nextNextFrameTotal = frames[currIdx + 2].reduce(
-        //   (acc, curr, idx) => acc + curr,
-        //   0,
-        // );
-        frameTotal += nextNextFrame;
+      if (nextFrame[0] === 10 && nextNextFrame) {
+        let firstThrowNextNext = nextNextFrame[0];
+        frameTotal += firstThrowNextNext;
+
+        console.log({
+          totalBefore: total,
+          frameTotal,
+          currIdx,
+          currentFrame,
+        });
       }
     }
 
     if (isSpare) {
-      const firstOfNextFrame = frames[currIdx + 1][0];
+      const firstOfNextFrame = nextFrame[0];
       frameTotal += firstOfNextFrame;
     }
 
@@ -76,8 +78,6 @@ const calculateScore = (frames) => {
 
 module.exports = calculateScore;
 //Continue refactoring
-// work on strikes
-// - Continue to work on strikes, there's an issue with next(Next)Frames and
-// adding to the total for the current frame
-// e.g. going into frame 9 we've got the right total
-// but we're adding 9 + all of frame 10 throws
+// Naming
+// Any other refactoring
+// Magic numbers
