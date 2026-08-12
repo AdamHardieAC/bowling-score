@@ -28,27 +28,27 @@
 //   }, 0);
 // };
 const calculateScore = (frames) => {
+  const strikeValue = 10;
+  const isStrike = (frameToCheck) => frameToCheck[0] === strikeValue;
+
   return frames.reduce((total, currentFrame, currIdx) => {
     let frameTotal = currentFrame.reduce((acc, curr, idx) => acc + curr, 0);
 
-    const isFinalFrame = currIdx === 9;
-    const isStrike = currentFrame[0] === 10 && !isFinalFrame;
-    const isSpare = !isStrike && frameTotal === 10 && !isFinalFrame;
+    const isFinalFrame = currIdx === frames.length - 1;
+    const isSpare = frameTotal === strikeValue && !isStrike(currentFrame);
+
     const nextFrame = frames[currIdx + 1];
     const nextNextFrame = frames[currIdx + 2];
 
-    if (isStrike) {
-      // const isNextFrameFinal = currIdx + 1 === 9;
+    if (isStrike(currentFrame) && !isFinalFrame) {
+      const nextFrameTotal = (
+        nextFrame.length === 3 ? [nextFrame[0], nextFrame[1]] : nextFrame
+      ).reduce((acc, curr, idx) => acc + curr, 0);
 
-      // const nextFrameTotal = (
-      //   isNextFrameFinal ? frames[currIdx + 1].slice(0, 2) : frames[currIdx + 1]
-      // ).reduce((acc, curr, idx) => acc + curr, 0);
-      const nextFrameTotal = nextFrame
-        .slice(0, 2)
-        .reduce((acc, curr, idx) => acc + curr, 0);
       frameTotal += nextFrameTotal;
-      // if nextNextFrame is a strike, do the same again
-      if (nextFrame[0] === 10 && nextNextFrame) {
+
+      // if nextFrame is a strike & nextNextFrame exists, do the same again
+      if (isStrike(nextFrame) && nextNextFrame) {
         let firstThrowNextNext = nextNextFrame[0];
         frameTotal += firstThrowNextNext;
 
@@ -61,7 +61,7 @@ const calculateScore = (frames) => {
       }
     }
 
-    if (isSpare) {
+    if (isSpare && !isFinalFrame) {
       const firstOfNextFrame = nextFrame[0];
       frameTotal += firstOfNextFrame;
     }
@@ -80,4 +80,5 @@ module.exports = calculateScore;
 //Continue refactoring
 // Naming
 // Any other refactoring
-// Magic numbers
+// Magic numbers -- nextNextFrame left, reusing it in a few areas
+//
